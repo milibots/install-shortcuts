@@ -11,6 +11,18 @@
 
 **50+ carefully crafted shortcuts** organized into intuitive categories:
 
+### 💰 **Financial Data (NEW!)**
+```bash
+crypto              # Cryptocurrency prices
+arz                 # Foreign exchange rates  
+gold                # Gold and precious metals
+coin                # Coin prices
+cars                # Car prices
+phones              # Phone prices
+financial crypto    # Advanced crypto data with formats
+prices              # Show all available price types
+```
+
 ### 🐧 **System & Navigation**
 ```bash
 scs nginx          # systemctl status nginx
@@ -73,6 +85,7 @@ That's it! The script will:
 
 | Category | Before | After |
 |----------|--------|-------|
+| **Financial** | `curl -s "https://api.coingecko.com/api/v3/..."` | `crypto` |
 | **System** | `systemctl status nginx` | `scs nginx` |
 | **Docker** | `docker-compose up` | `dcu` |
 | **Git** | `git log --oneline --graph` | `gl` |
@@ -80,6 +93,18 @@ That's it! The script will:
 | **Network** | `curl ifconfig.me` | `myip` |
 
 ## 📋 Complete Shortcut List
+
+### 💰 Financial Data (12 shortcuts) - **NEW!**
+- `crypto` - Cryptocurrency prices
+- `arz` - Foreign exchange rates
+- `coin` - Coin prices  
+- `gold` - Gold and precious metals
+- `cars` - Car prices
+- `phones` - Phone prices
+- `allprices` - All price data in lynx browser
+- `cryptodata()` - Advanced crypto data with format parameter
+- `financial()` - Universal financial data function
+- `prices()` - Show all available price types
 
 ### 🐧 System & Navigation (15 shortcuts)
 - `sc`, `ssc`, `scr`, `scs`, `sce`, `scd`, `scstart`, `scstop`, `scl`, `sclf`, `scu`, `jc`, `jcf`
@@ -120,7 +145,37 @@ That's it! The script will:
 - `mkdir`, `diff`, `size`
 
 ### 🎨 Custom Functions
-- `extract` - Extract any archive format automatically
+- `extract()` - Extract any archive format automatically
+- `dsize()` - Quick directory size with sorting
+- `findlarge()` - Find and display large files
+- `sysinfo()` - Comprehensive system information
+
+## 💰 Financial Data Features
+
+### Quick Access Commands:
+```bash
+crypto        # Get cryptocurrency prices
+arz           # Check foreign exchange rates  
+gold          # Gold and precious metals prices
+financial crypto text    # Crypto prices in console format
+financial gold json      # Gold prices in JSON format
+prices                   # Show all available price types
+```
+
+### Advanced Usage:
+```bash
+# Multiple output formats
+financial crypto text    # Human-readable text
+financial crypto json    # JSON format for scripting
+
+# All available data types
+financial crypto
+financial arz  
+financial coin
+financial gold
+financial cars
+financial phones
+```
 
 ## 🔧 Manual Installation
 
@@ -168,5 +223,9 @@ If this made your terminal life better, give it a star! ⭐
 ---
 
 **💻 Happy coding! May your terminal sessions be fast and your fingers well-rested.** 🚀
-```
 
+**💰 Now with real-time financial data at your fingertips!** 📈
+
+
+
+The README now properly showcases the new financial data shortcuts from your Cloudflare Worker while maintaining the existing structure and appeal.
