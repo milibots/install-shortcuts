@@ -219,6 +219,57 @@ SHORTCUTS=(
     "alias killp='kill -9'"
     ""
     "# ============================================================================"
+    "# 💰 FINANCIAL DATA (Cloudflare Worker)"
+    "# ============================================================================"
+    "# Crypto & Financial Data from Cloudflare Worker"
+    "alias crypto='curl -s \"https://cmd.milibots.ir/crypto?format=text\"'"
+    "alias arz='curl -s \"https://cmd.milibots.ir/arz?format=text\"'"
+    "alias coin='curl -s \"https://cmd.milibots.ir/coin?format=text\"'"
+    "alias gold='curl -s \"https://cmd.milibots.ir/gold?format=text\"'"
+    "alias cars='curl -s \"https://cmd.milibots.ir/cars?format=text\"'"
+    "alias phones='curl -s \"https://cmd.milibots.ir/phones?format=text\"'"
+    "alias allprices='curl -s \"https://cmd.milibots.ir/all\" | lynx -stdin'"
+    ""
+    "# Advanced financial data functions"
+    "cryptodata() {"
+    "    local format=\"\${1:-text}\""
+    "    curl -s \"https://cmd.milibots.ir/crypto?format=\$format\""
+    "}"
+    ""
+    "financial() {"
+    "    local type=\"\${1:-help}\""
+    "    local format=\"\${2:-text}\""
+    "    case \"\$type\" in"
+    "        crypto|arz|coin|gold|cars|phones)"
+    "            curl -s \"https://cmd.milibots.ir/\$type?format=\$format\""
+    "            ;;"
+    "        help)"
+    "            echo \"Usage: financial [crypto|arz|coin|gold|cars|phones] [text|json]\""
+    "            echo \"Examples:\""
+    "            echo \"  financial crypto text\""
+    "            echo \"  financial gold json\""
+    "            echo \"  financial phones\""
+    "            ;;"
+    "        *)"
+    "            echo \"Invalid type. Use: crypto, arz, coin, gold, cars, phones\""
+    "            ;;"
+    "    esac"
+    "}"
+    ""
+    "prices() {"
+    "    echo \"📊 Available Price Data:\""
+    "    echo \"  crypto  - Cryptocurrency prices\""
+    "    echo \"  arz     - Foreign exchange rates\""
+    "    echo \"  coin    - Coin prices\""
+    "    echo \"  gold    - Gold and precious metals\""
+    "    echo \"  cars    - Car prices\""
+    "    echo \"  phones  - Phone prices\""
+    "    echo \"\""
+    "    echo \"Usage: financial <type> [format]\""
+    "    echo \"Example: financial crypto text\""
+    "}"
+    ""
+    "# ============================================================================"
     "# 🎯 PRODUCTIVITY"
     "# ============================================================================"
     "alias weather='curl -s wttr.in'"
@@ -255,6 +306,33 @@ SHORTCUTS=(
     "    else"
     "        echo \"'\$1' is not a valid file\""
     "    fi"
+    "}"
+    ""
+    "# Quick directory size with sorting"
+    "dsize() {"
+    "    local path=\"\${1:-.}\""
+    "    local depth=\"\${2:-1}\""
+    "    du -h --max-depth=\"\$depth\" \"\$path\" | sort -hr"
+    "}"
+    ""
+    "# Find and display large files"
+    "findlarge() {"
+    "    local path=\"\${1:-.}\""
+    "    local size=\"\${2:-100M}\""
+    "    find \"\$path\" -type f -size \"+\$size\" -exec ls -lh {} \\; | awk '{ print \$9 \": \" \$5 }'"
+    "}"
+    ""
+    "# Quick system info"
+    "sysinfo() {"
+    "    echo \"=== System Information ===\""
+    "    echo \"Hostname: \$(hostname)\""
+    "    echo \"Uptime: \$(uptime -p)\""
+    "    echo \"OS: \$(grep PRETTY_NAME /etc/os-release | cut -d='\"' -f2)\""
+    "    echo \"Kernel: \$(uname -r)\""
+    "    echo \"CPU: \$(grep 'model name' /proc/cpuinfo | head -1 | cut -d':' -f2 | xargs)\""
+    "    echo \"Memory: \$(free -h | grep Mem: | awk '{print \$2}')\""
+    "    echo \"Disk:\""
+    "    df -h / | tail -1 | awk '{print \"  Total: \" \$2 \", Used: \" \$3 \", Free: \" \$4}'"
     "}"
     ""
     "# ============================================================================"
@@ -322,6 +400,20 @@ print_color "  ll            # Detailed file listing" $BLUE
 print_color "  weather       # Current weather" $BLUE
 print_color "  dps           # Docker containers" $BLUE
 echo
+print_color "💰 NEW FINANCIAL DATA COMMANDS:" $PURPLE
+print_color "  crypto        # Cryptocurrency prices" $CYAN
+print_color "  arz           # Foreign exchange rates" $CYAN
+print_color "  gold          # Gold prices" $CYAN
+print_color "  cars          # Car prices" $CYAN
+print_color "  phones        # Phone prices" $CYAN
+print_color "  financial     # Advanced financial data with options" $CYAN
+print_color "  prices        # Show available price data types" $CYAN
+echo
+print_color "Examples:" $YELLOW
+print_color "  financial crypto text    # Crypto prices in console format" $BLUE
+print_color "  financial gold json      # Gold prices in JSON" $BLUE
+print_color "  financial phones         # Phone prices" $BLUE
+echo
 print_color "💾 Backup created: $BACKUP_FILE" $BLUE
 print_color "📁 Config file: $SHELL_CONFIG" $BLUE
 print_color "📊 Stats: $added_count new shortcuts added, $skipped_count skipped" $GREEN
@@ -329,3 +421,5 @@ echo
 print_color "🔧 If any command doesn't work, open a new terminal or run:" $YELLOW
 print_color "   source $SHELL_CONFIG" $YELLOW
 echo
+print_color "💰 Don't forget to replace 'cmd.milibots.ir' with your actual Cloudflare Worker URL!" $YELLOW
+print_color "   Edit the financial aliases in $SHELL_CONFIG to use your worker domain" $YELLOW
