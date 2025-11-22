@@ -182,6 +182,10 @@ SHORTCUTS=(
     "alias gold='curl -s \"https://cmd.milibots.ir/gold?format=text\"'"
     "alias cars='curl -s \"https://cmd.milibots.ir/cars?format=text\"'"
     "alias phones='curl -s \"https://cmd.milibots.ir/phones?format=text\"'"
+    "alias time='curl -s \"https://cmd.milibots.ir/time?format=text\"'"
+    "alias nowtime='curl -s \"https://cmd.milibots.ir/time?format=text\"'"
+    "alias irantime='curl -s \"https://cmd.milibots.ir/time?format=text\"'"
+    "alias jalali='curl -s \"https://cmd.milibots.ir/time?format=text\"'"
     "alias allprices='curl -s \"https://cmd.milibots.ir/all\" | lynx -stdin'"
     ""
     "cryptodata() {"
@@ -209,6 +213,11 @@ SHORTCUTS=(
     "    esac"
     "}"
     ""
+    "timedata() {"
+    "    local format=\"\${1:-text}\""
+    "    curl -s \"https://cmd.milibots.ir/time?format=\$format\""
+    "}"
+    ""
     "prices() {"
     "    echo \"📊 Available Price Data:\""
     "    echo \"  crypto  - Cryptocurrency prices\""
@@ -220,6 +229,18 @@ SHORTCUTS=(
     "    echo \"\""
     "    echo \"Usage: financial <type> [format]\""
     "    echo \"Example: financial crypto text\""
+    "}"
+    ""
+    "currenttime() {"
+    "    echo \"🕐 Current Time Commands:\""
+    "    echo \"  time      - Iranian time with all calendars\""
+    "    echo \"  nowtime   - Quick time check\""
+    "    echo \"  irantime  - Iranian calendar time\""
+    "    echo \"  jalali    - Jalali calendar\""
+    "    echo \"  timedata  - Time data with format option\""
+    "    echo \"\""
+    "    echo \"Usage: timedata [text|json]\""
+    "    echo \"Example: timedata json\""
     "}"
     ""
     "alias weather='curl -s wttr.in'"
@@ -318,6 +339,10 @@ for line in "${SHORTCUTS[@]}"; do
     fi
 done
 
+echo "" >> "$SHELL_CONFIG"
+echo "# 🎯 END OF SHORTCUTS" >> "$SHELL_CONFIG"
+echo "# ============================================================================" >> "$SHELL_CONFIG"
+
 print_success "Successfully added $added_count shortcuts and functions"
 
 print_info "Applying shortcuts to current session..."
@@ -337,6 +362,12 @@ else
     print_error "✗ Systemctl shortcuts missing!"
 fi
 
+if grep -q "alias time=" "$SHELL_CONFIG"; then
+    print_success "✓ Time shortcuts installed"
+else
+    print_error "✗ Time shortcuts missing!"
+fi
+
 print_info "Testing shortcuts functionality..."
 
 if alias crypto >/dev/null 2>&1; then
@@ -351,6 +382,12 @@ else
     print_warning "⚠ 'scs' command not available in current session"
 fi
 
+if alias time >/dev/null 2>&1; then
+    print_success "✓ 'time' command is working"
+else
+    print_warning "⚠ 'time' command not available in current session"
+fi
+
 echo
 print_color "🎉 Installation Complete!" $GREEN
 echo
@@ -360,6 +397,7 @@ print_color "Try these commands:" $YELLOW
 print_color "  crypto        # Cryptocurrency prices" $BLUE
 print_color "  arz           # Foreign exchange rates" $BLUE
 print_color "  gold          # Gold prices" $BLUE
+print_color "  time          # Iranian time with all calendars" $BLUE
 print_color "  scs nginx     # System status (if nginx installed)" $BLUE
 print_color "  myip          # Show your public IP" $BLUE
 print_color "  weather       # Current weather" $BLUE
@@ -373,6 +411,14 @@ print_color "💰 FINANCIAL DATA COMMANDS:" $PURPLE
 print_color "  financial crypto text    # Crypto prices in console format" $CYAN
 print_color "  financial gold json      # Gold prices in JSON" $CYAN
 print_color "  prices                   # Show all available price types" $CYAN
+echo
+print_color "🕐 TIME COMMANDS:" $PURPLE
+print_color "  time          # Iranian time with all calendars" $CYAN
+print_color "  nowtime       # Quick time check" $CYAN
+print_color "  irantime      # Iranian calendar time" $CYAN
+print_color "  jalali        # Jalali calendar" $CYAN
+print_color "  timedata json # Time data in JSON format" $CYAN
+print_color "  currenttime   # Show all time commands" $CYAN
 echo
 print_color "🐍 PYTHON COMMANDS:" $PURPLE
 print_color "  pmv           # python -m venv venv" $CYAN
