@@ -44,23 +44,13 @@ reload_shell_config() {
     local config_file=$1
     print_info "Reloading shell configuration: $config_file"
     
-    # Source the file directly in the current shell
     if [ -f "$config_file" ]; then
-        # Use source or . to reload in current shell context
         if [ -n "$ZSH_VERSION" ]; then
             source "$config_file" 2>/dev/null
         else
             source "$config_file" 2>/dev/null
         fi
         print_success "Shell configuration reloaded successfully!"
-        
-        # Test if shortcuts are working
-        print_info "Testing shortcuts..."
-        if alias scs >/dev/null 2>&1; then
-            print_success "Systemctl shortcuts are working!"
-        else
-            print_warning "Some shortcuts may need a new terminal session"
-        fi
     else
         print_error "Config file not found: $config_file"
     fi
@@ -342,6 +332,18 @@ SHORTCUTS=(
 
 print_header
 
+# Check if running as root and warn
+if [ "$EUID" -eq 0 ]; then
+    print_warning "You are running as root! This will install shortcuts for root user."
+    print_warning "If you want shortcuts for your regular user, run without sudo."
+    read -p "Continue anyway? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        print_error "Installation cancelled. Run without sudo for user installation."
+        exit 1
+    fi
+fi
+
 # Check if shell config exists
 if [ ! -f "$SHELL_CONFIG" ]; then
     print_warning "Shell config $SHELL_CONFIG not found, creating it..."
@@ -353,73 +355,94 @@ print_info "Creating backup: $BACKUP_FILE"
 cp "$SHELL_CONFIG" "$BACKUP_FILE"
 print_success "Backup created successfully"
 
-# Check if shortcuts already exist
-if grep -q "SYSTEMCTL & TMUX SHORTCUTS" "$SHELL_CONFIG"; then
-    print_warning "Shortcuts already installed! Updating existing installation..."
-    
-    # Remove existing shortcuts section
-    sed -i '/# ============================================================================/,/# 🎯 END OF SHORTCUTS/d' "$SHELL_CONFIG"
-    print_success "Removed existing shortcuts"
-fi
+# Remove existing shortcuts section completely
+print_info "Removing existing shortcuts section if present..."
+sed -i '/# ============================================================================/,/# 🎯 END OF SHORTCUTS/d' "$SHELL_CONFIG"
 
-# Add shortcuts to shell config
-print_info "Adding 50+ sexy shortcuts to $SHELL_CONFIG..."
+# Add a clear separator before new shortcuts
+echo "" >> "$SHELL_CONFIG"
+echo "# ============================================================================" >> "$SHELL_CONFIG"
+echo "# 🚀 CUSTOM SHORTCUTS - INSTALLED $(date) " >> "$SHELL_CONFIG"
+echo "# ============================================================================" >> "$SHELL_CONFIG"
+echo "" >> "$SHELL_CONFIG"
+
+# Add all shortcuts to shell config
+print_info "Installing all shortcuts to $SHELL_CONFIG..."
 
 added_count=0
-skipped_count=0
-
 for line in "${SHORTCUTS[@]}"; do
-    if [[ "$line" == alias* ]]; then
-        alias_name=$(echo "$line" | cut -d'=' -f1 | cut -d' ' -f2)
-        if grep -q "alias $alias_name=" "$SHELL_CONFIG"; then
-            print_warning "Alias '$alias_name' already exists, skipping..."
-            ((skipped_count++))
-            continue
-        fi
+    echo "$line" >> "$SHELL_CONFIG"
+    if [[ "$line" == alias* ]] || [[ "$line" == *"()"* ]]; then
         ((added_count++))
     fi
-    echo "$line" >> "$SHELL_CONFIG"
 done
 
-print_success "Added $added_count new shortcuts ($skipped_count already existed)"
+print_success "Successfully added $added_count shortcuts and functions"
 
 # Force reload of shell configuration
 print_info "Applying shortcuts to current session..."
 reload_shell_config "$SHELL_CONFIG"
 
+# Verify installation
+print_info "Verifying installation..."
+
+# Check if financial shortcuts are installed
+if grep -q "alias crypto=" "$SHELL_CONFIG"; then
+    print_success "✓ Financial shortcuts installed"
+else
+    print_error "✗ Financial shortcuts missing!"
+fi
+
+# Check if systemctl shortcuts are installed
+if grep -q "alias scs=" "$SHELL_CONFIG"; then
+    print_success "✓ Systemctl shortcuts installed"
+else
+    print_error "✗ Systemctl shortcuts missing!"
+fi
+
+# Test if shortcuts are working
+print_info "Testing shortcuts functionality..."
+
+# Test crypto command
+if alias crypto >/dev/null 2>&1; then
+    print_success "✓ 'crypto' command is working"
+else
+    print_warning "⚠ 'crypto' command not available in current session"
+fi
+
+# Test systemctl shortcut
+if alias scs >/dev/null 2>&1; then
+    print_success "✓ 'scs' command is working"
+else
+    print_warning "⚠ 'scs' command not available in current session"
+fi
+
 # Show usage examples
 echo
 print_color "🎉 Installation Complete!" $GREEN
 echo
-print_color "📖 Testing your new shortcuts:" $CYAN
+print_color "📖 Your new shortcuts are ready:" $CYAN
 echo
 print_color "Try these commands:" $YELLOW
-print_color "  myip          # Show your public IP" $BLUE
+print_color "  crypto        # Cryptocurrency prices" $BLUE
+print_color "  arz           # Foreign exchange rates" $BLUE
+print_color "  gold          # Gold prices" $BLUE
 print_color "  scs nginx     # System status (if nginx installed)" $BLUE
-print_color "  ll            # Detailed file listing" $BLUE
+print_color "  myip          # Show your public IP" $BLUE
 print_color "  weather       # Current weather" $BLUE
-print_color "  dps           # Docker containers" $BLUE
 echo
-print_color "💰 NEW FINANCIAL DATA COMMANDS:" $PURPLE
-print_color "  crypto        # Cryptocurrency prices" $CYAN
-print_color "  arz           # Foreign exchange rates" $CYAN
-print_color "  gold          # Gold prices" $CYAN
-print_color "  cars          # Car prices" $CYAN
-print_color "  phones        # Phone prices" $CYAN
-print_color "  financial     # Advanced financial data with options" $CYAN
-print_color "  prices        # Show available price data types" $CYAN
+print_color "💰 FINANCIAL DATA COMMANDS:" $PURPLE
+print_color "  financial crypto text    # Crypto prices in console format" $CYAN
+print_color "  financial gold json      # Gold prices in JSON" $CYAN
+print_color "  prices                   # Show all available price types" $CYAN
 echo
-print_color "Examples:" $YELLOW
-print_color "  financial crypto text    # Crypto prices in console format" $BLUE
-print_color "  financial gold json      # Gold prices in JSON" $BLUE
-print_color "  financial phones         # Phone prices" $BLUE
+print_color "📊 Installation Summary:" $YELLOW
+print_color "  Config file: $SHELL_CONFIG" $BLUE
+print_color "  Backup: $BACKUP_FILE" $BLUE
+print_color "  Shortcuts installed: $added_count" $GREEN
 echo
-print_color "💾 Backup created: $BACKUP_FILE" $BLUE
-print_color "📁 Config file: $SHELL_CONFIG" $BLUE
-print_color "📊 Stats: $added_count new shortcuts added, $skipped_count skipped" $GREEN
-echo
-print_color "🔧 If any command doesn't work, open a new terminal or run:" $YELLOW
+print_color "🔧 If any command doesn't work immediately, open a new terminal or run:" $YELLOW
 print_color "   source $SHELL_CONFIG" $YELLOW
 echo
-print_color "💰 Don't forget to replace 'cmd.milibots.ir' with your actual Cloudflare Worker URL!" $YELLOW
-print_color "   Edit the financial aliases in $SHELL_CONFIG to use your worker domain" $YELLOW
+print_color "💡 To verify all shortcuts, check:" $CYAN
+print_color "   grep 'alias' $SHELL_CONFIG | wc -l" $BLUE
