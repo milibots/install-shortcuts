@@ -1,15 +1,12 @@
 # 🚀 Shell Shortcuts Installer
 
-> **Supercharge your terminal with 50+ sexy shortcuts!**  
-> One command to rule them all - transform your shell experience instantly.
-
 ![GitHub](https://img.shields.io/badge/Shell-Bash%20%7C%20Zsh-blue?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-lightgrey?style=for-the-badge)
 
 ## ✨ What's Inside?
 
-**50+ carefully crafted shortcuts** organized into intuitive categories:
+**60+ carefully crafted shortcuts** organized into intuitive categories:
 
 ### 💰 **Financial Data (NEW!)**
 ```bash
@@ -21,6 +18,20 @@ cars                # Car prices
 phones              # Phone prices
 financial crypto    # Advanced crypto data with formats
 prices              # Show all available price types
+```
+
+### 🐍 **Python Development (NEW!)**
+```bash
+pmv                 # python -m venv venv (create virtual env)
+pfr                 # pip freeze > requirements.txt
+cls                 # clear screen
+activate            # source venv/bin/activate
+```
+
+### 🔧 **Installation Commands (NEW!)**
+```bash
+setpanel            # Install milibots panel
+setssl              # Setup SSL certificates
 ```
 
 ### 🐧 **System & Navigation**
@@ -86,6 +97,8 @@ That's it! The script will:
 | Category | Before | After |
 |----------|--------|-------|
 | **Financial** | `curl -s "https://api.coingecko.com/api/v3/..."` | `crypto` |
+| **Python** | `python3 -m venv venv` | `pmv` |
+| **Python** | `pip freeze > requirements.txt` | `pfr` |
 | **System** | `systemctl status nginx` | `scs nginx` |
 | **Docker** | `docker-compose up` | `dcu` |
 | **Git** | `git log --oneline --graph` | `gl` |
@@ -94,7 +107,7 @@ That's it! The script will:
 
 ## 📋 Complete Shortcut List
 
-### 💰 Financial Data (12 shortcuts) - **NEW!**
+### 💰 Financial Data (12 shortcuts)
 - `crypto` - Cryptocurrency prices
 - `arz` - Foreign exchange rates
 - `coin` - Coin prices  
@@ -106,9 +119,22 @@ That's it! The script will:
 - `financial()` - Universal financial data function
 - `prices()` - Show all available price types
 
+### 🐍 Python Development (6 shortcuts) - **NEW!**
+- `python` - python3
+- `pip` - pip3
+- `py` - python3
+- `venv` - python3 -m venv
+- `pmv` - python3 -m venv venv (quick virtual env)
+- `pfr` - pip freeze > requirements.txt
+- `activate` - source venv/bin/activate
+
+### 🔧 Installation Commands (2 shortcuts) - **NEW!**
+- `setpanel` - Install milibots panel
+- `setssl` - Setup SSL certificates
+
 ### 🐧 System & Navigation (15 shortcuts)
 - `sc`, `ssc`, `scr`, `scs`, `sce`, `scd`, `scstart`, `scstop`, `scl`, `sclf`, `scu`, `jc`, `jcf`
-- `..`, `...`, `....`, `~`, `c`, `h`, `ls`, `ll`, `la`, `l`, `ltr`
+- `..`, `...`, `....`, `~`, `c`, `cls`, `h`, `ls`, `ll`, `la`, `l`, `ltr`
 - `rm`, `cp`, `mv` (safe versions)
 
 ### 🐋 Docker (9 shortcuts)
@@ -122,9 +148,6 @@ That's it! The script will:
 
 ### 🌐 Networking (6 shortcuts)
 - `ip`, `ips`, `myip`, `ping`, `ports`, `wget`
-
-### 🐍 Python (5 shortcuts)
-- `python`, `pip`, `py`, `venv`, `activate`
 
 ### 🎮 Tmux (8 shortcuts)
 - `t`, `ta`, `tn`, `tns`, `tl`, `tk`, `tks`, `td`
@@ -177,6 +200,32 @@ financial cars
 financial phones
 ```
 
+## 🐍 Python Development Workflow
+
+### Complete Python Environment Setup:
+```bash
+pmv          # Create virtual environment
+activate     # Activate virtual environment
+pip install requests pandas numpy  # Install packages
+pfr          # Generate requirements.txt
+```
+
+### Quick Python Commands:
+```bash
+py script.py           # Run Python script
+pip list              # Show installed packages
+pfr                   # Export dependencies
+cls                   # Clear screen
+```
+
+## 🔧 Installation Commands
+
+### Quick Setup:
+```bash
+setpanel    # Install milibots control panel
+setssl      # Setup SSL certificates automatically
+```
+
 ## 🔧 Manual Installation
 
 Prefer to check the script first? 
@@ -199,33 +248,5 @@ chmod +x install-shortcuts.sh
 # Simply remove the shortcut section from your ~/.bashrc or ~/.zshrc
 # Look for the section between:
 # "# ============================================================================"
-# "# 🚀 SYSTEMCTL & TMUX SHORTCUTS"
-# and
-# "# 🎯 END OF SHORTCUTS"
-```
-
-## 🤝 Contributing
-
-Found a cool shortcut? Want to improve something?
-
-1. Fork the repository
-2. Add your awesome shortcuts
-3. Submit a pull request
-
-## 📝 License
-
-MIT License - feel free to use this however you want!
-
-## ⭐ Support
-
-If this made your terminal life better, give it a star! ⭐
-
----
-
-**💻 Happy coding! May your terminal sessions be fast and your fingers well-rested.** 🚀
-
-**💰 Now with real-time financial data at your fingertips!** 📈
-
-
-
-The README now properly showcases the new financial data shortcuts from your Cloudflare Worker while maintaining the existing structure and appeal.
+# "# 🚀 CUSTOM SHORTCUTS"
+# and the end of the shortcuts section
