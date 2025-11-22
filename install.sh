@@ -39,6 +39,33 @@ print_error() {
     print_color "❌ $1" $RED
 }
 
+# Function to reload shell configuration
+reload_shell_config() {
+    local config_file=$1
+    print_info "Reloading shell configuration: $config_file"
+    
+    # Source the file directly in the current shell
+    if [ -f "$config_file" ]; then
+        # Use source or . to reload in current shell context
+        if [ -n "$ZSH_VERSION" ]; then
+            source "$config_file" 2>/dev/null
+        else
+            source "$config_file" 2>/dev/null
+        fi
+        print_success "Shell configuration reloaded successfully!"
+        
+        # Test if shortcuts are working
+        print_info "Testing shortcuts..."
+        if alias scs >/dev/null 2>&1; then
+            print_success "Systemctl shortcuts are working!"
+        else
+            print_warning "Some shortcuts may need a new terminal session"
+        fi
+    else
+        print_error "Config file not found: $config_file"
+    fi
+}
+
 # Check if shell config exists
 get_shell_config() {
     if [ -n "$ZSH_VERSION" ]; then
@@ -135,7 +162,7 @@ SHORTCUTS=(
     "# ============================================================================"
     "alias ip='ip -c'"
     "alias ips='ip addr show'"
-    "alias myip='curl ifconfig.me'"
+    "alias myip='curl -s ifconfig.me'"
     "alias ping='ping -c 5'"
     "alias wget='wget -c'"
     ""
@@ -194,8 +221,8 @@ SHORTCUTS=(
     "# ============================================================================"
     "# 🎯 PRODUCTIVITY"
     "# ============================================================================"
-    "alias weather='curl wttr.in'"
-    "alias cheat='curl cheat.sh'"
+    "alias weather='curl -s wttr.in'"
+    "alias cheat='curl -s cheat.sh'"
     "alias now='date +\"%T\"'"
     "alias today='date +\"%Y-%m-%d\"'"
     ""
@@ -278,30 +305,27 @@ done
 
 print_success "Added $added_count new shortcuts ($skipped_count already existed)"
 
-# Reload shell config
-print_info "Reloading shell configuration..."
-source "$SHELL_CONFIG" 2>/dev/null || true
-
-print_success "Shell configuration updated!"
+# Force reload of shell configuration
+print_info "Applying shortcuts to current session..."
+reload_shell_config "$SHELL_CONFIG"
 
 # Show usage examples
 echo
 print_color "🎉 Installation Complete!" $GREEN
 echo
-print_color "📖 Popular Usage Examples:" $CYAN
-print_color "   System:   scs nginx, scr nginx, df, free" $BLUE
-print_color "   Files:    ll, la, .., ..." $BLUE
-print_color "   Tmux:     tns dev, ta, tl" $BLUE
-print_color "   Git:      gs, gcm 'message', gp" $BLUE
-print_color "   Docker:   dps, dcu, dcd" $BLUE
-print_color "   Network:  myip, ports" $BLUE
-print_color "   Search:   psg nginx, search 'text'" $BLUE
-print_color "   Extract:  extract file.tar.gz" $BLUE
+print_color "📖 Testing your new shortcuts:" $CYAN
 echo
-print_color "🔄 To apply changes in current session, run:" $YELLOW
-print_color "   source $SHELL_CONFIG" $YELLOW
+print_color "Try these commands:" $YELLOW
+print_color "  myip          # Show your public IP" $BLUE
+print_color "  scs nginx     # System status (if nginx installed)" $BLUE
+print_color "  ll            # Detailed file listing" $BLUE
+print_color "  weather       # Current weather" $BLUE
+print_color "  dps           # Docker containers" $BLUE
 echo
 print_color "💾 Backup created: $BACKUP_FILE" $BLUE
 print_color "📁 Config file: $SHELL_CONFIG" $BLUE
 print_color "📊 Stats: $added_count new shortcuts added, $skipped_count skipped" $GREEN
+echo
+print_color "🔧 If any command doesn't work, open a new terminal or run:" $YELLOW
+print_color "   source $SHELL_CONFIG" $YELLOW
 echo
