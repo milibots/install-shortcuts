@@ -176,6 +176,9 @@ SHORTCUTS=(
     "alias setpanel='bash <(curl -fsSL https://raw.githubusercontent.com/milibots/panel/main/install.sh)'"
     "alias setssl='sudo bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/milibots/install-ssl/main/ssl-setup.sh)\"'"
     ""
+    "# Context CLI - AI-powered context manager"
+    "alias context='bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/milibots/context-cli/main/context.sh)\"'"
+    ""
     "alias crypto='curl -s \"https://cmd.milibots.ir/crypto?format=text\"'"
     "alias arz='curl -s \"https://cmd.milibots.ir/arz?format=text\"'"
     "alias coin='curl -s \"https://cmd.milibots.ir/coin?format=text\"'"
@@ -368,6 +371,12 @@ else
     print_error "✗ Time shortcuts missing!"
 fi
 
+if grep -q "alias context=" "$SHELL_CONFIG"; then
+    print_success "✓ Context CLI shortcuts installed"
+else
+    print_error "✗ Context CLI shortcuts missing!"
+fi
+
 print_info "Testing shortcuts functionality..."
 
 if alias crypto >/dev/null 2>&1; then
@@ -388,12 +397,19 @@ else
     print_warning "⚠ 'time' command not available in current session"
 fi
 
+if alias context >/dev/null 2>&1; then
+    print_success "✓ 'context' command is working"
+else
+    print_warning "⚠ 'context' command not available in current session"
+fi
+
 echo
 print_color "🎉 Installation Complete!" $GREEN
 echo
 print_color "📖 Your new shortcuts are ready:" $CYAN
 echo
 print_color "Try these commands:" $YELLOW
+print_color "  context       # AI-powered context manager for your terminal" $BLUE
 print_color "  crypto        # Cryptocurrency prices" $BLUE
 print_color "  arz           # Foreign exchange rates" $BLUE
 print_color "  gold          # Gold prices" $BLUE
@@ -428,6 +444,10 @@ echo
 print_color "🔧 INSTALLATION COMMANDS:" $PURPLE
 print_color "  setpanel      # Install milibots panel" $CYAN
 print_color "  setssl        # Setup SSL certificates" $CYAN
+echo
+print_color "🤖 CONTEXT CLI:" $PURPLE
+print_color "  context       # AI-powered context manager" $CYAN
+print_color "  context --help # Show help for context CLI" $CYAN
 echo
 print_color "📊 Installation Summary:" $YELLOW
 print_color "  Config file: $SHELL_CONFIG" $BLUE
